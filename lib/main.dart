@@ -21,7 +21,6 @@ class FavoriteWidget extends StatefulWidget {
   * (2)如果所讨论的状态是有关界面外观效果的，例如动画，那么状态最好有widget本身来管理
  */
 
-
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   bool _isFavorited = true;
   int _favoriteCount = 41;
@@ -64,6 +63,84 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   }
 }
 
+
+// -----------------TapBoxA------------------- 
+/*
+ * widget管理自身状态 
+ */
+class TapBoxA extends StatefulWidget {
+  TapBoxA({Key key}) : super(key: key);
+
+  _TapBoxAState createState() => _TapBoxAState();
+}
+
+class _TapBoxAState extends State<TapBoxA> {
+  bool _active = false; 
+  void _handleTap() {
+    setState(() { //改变
+     _active = !_active; 
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _handleTap,
+      child: Container(
+        child: Text(
+          _active? 'Active' : 'Inactive',
+          style: TextStyle(
+            fontSize:32.0,color:Colors.white
+          ),
+        ),
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+          color: _active ? Colors.green : Colors.grey
+        ),
+      ),
+    );
+  }
+}
+
+// ------------------TapBoxB---------------------
+/*
+ *父widget 管理子widget的 state状态 
+ */
+class ParentWidget extends StatefulWidget {
+  ParentWidget({Key key}) : super(key: key);
+
+  _ParentWidgetState createState() => _ParentWidgetState();
+}
+
+class _ParentWidgetState extends State<ParentWidget> {
+  bool _active = false;
+
+  void _handleTapBoxChange(bool newValue) {
+    setState(() {
+     _active = newValue; 
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+       child: child,
+    );
+  }
+}
+// TapBoxB 子Widget
+class TapBoxB extends StatelessWidget {
+  const TapBoxB({Key key,this.active:false}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: child,
+    );
+  }
+}
+
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -102,6 +179,11 @@ class MyApp extends StatelessWidget {
           // ),
           // Text('41'),
           FavoriteWidget(),
+          Row(
+            children: <Widget>[
+            TapBoxA()
+            ],
+          )
         ],
       ),
     );
